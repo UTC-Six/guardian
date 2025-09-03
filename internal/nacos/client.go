@@ -11,7 +11,7 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/sirupsen/logrus"
 
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/types"
 )
 
 // Client Nacos客户端

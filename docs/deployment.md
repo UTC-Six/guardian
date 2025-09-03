@@ -13,7 +13,7 @@
 #### 安装步骤
 ```bash
 # 1. 克隆项目
-git clone https://github.com/guardian/content-filter.git
+git clone https://github.com/UTC-Six/guardian.git
 cd content-filter
 
 # 2. 安装依赖

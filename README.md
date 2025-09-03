@@ -34,7 +34,7 @@
 ### 安装
 
 ```bash
-go get github.com/guardian/content-filter
+go get github.com/UTC-Six/guardian
 ```
 
 ### 基本使用
@@ -47,8 +47,8 @@ import (
     "log"
     "time"
     
-    "github.com/guardian/content-filter/pkg/guardian"
-    "github.com/guardian/content-filter/internal/types"
+    "github.com/UTC-Six/guardian/pkg/guardian"
+    "github.com/UTC-Six/guardian/internal/types"
 )
 
 func main() {

@@ -2,13 +2,12 @@ package guardian
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/guardian/content-filter/internal/filter"
-	"github.com/guardian/content-filter/internal/nacos"
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/filter"
+	"github.com/UTC-Six/guardian/internal/nacos"
+	"github.com/UTC-Six/guardian/internal/types"
 )
 
 // Guardian 黄反校验SDK主入口

@@ -10,10 +10,10 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/guardian/content-filter/internal/algorithm"
-	"github.com/guardian/content-filter/internal/cache"
-	"github.com/guardian/content-filter/internal/nacos"
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/algorithm"
+	"github.com/UTC-Six/guardian/internal/cache"
+	"github.com/UTC-Six/guardian/internal/nacos"
+	"github.com/UTC-Six/guardian/internal/types"
 )
 
 // ContentFilter 内容过滤器
@@ -112,7 +112,7 @@ func (f *ContentFilter) updateWordDatabase(wordDB *types.WordDatabase) error {
 		f.cache.Clear()
 	}
 
-	f.logger.Infof("Word database updated successfully, version: %s, words: %d", 
+	f.logger.Infof("Word database updated successfully, version: %s, words: %d",
 		wordDB.Version, f.automaton.GetNodeCount())
 
 	return nil
@@ -122,7 +122,7 @@ func (f *ContentFilter) updateWordDatabase(wordDB *types.WordDatabase) error {
 func (f *ContentFilter) startConfigListener() error {
 	return f.nacosClient.ListenConfig(f.config.DataId, f.config.Group, func(content string) {
 		f.logger.Info("Received config change notification")
-		
+
 		// 解析新的词库配置
 		var wordDB types.WordDatabase
 		if err := json.Unmarshal([]byte(content), &wordDB); err != nil {
@@ -164,7 +164,7 @@ func (f *ContentFilter) Filter(text string, options *types.FilterOptions) *types
 	if f.cache != nil {
 		cacheKey := f.generateCacheKey(text, options)
 		if result, found := f.cache.Get(cacheKey); found {
-			return result
+			return result.(*types.FilterResult)
 		}
 	}
 
@@ -226,7 +226,7 @@ func (f *ContentFilter) doFilter(text string, options *types.FilterOptions) *typ
 	for _, output := range outputs {
 		words = append(words, output.Word)
 		categories = append(categories, output.Categories...)
-		details[output.Word] = fmt.Sprintf("level:%d,categories:%s", 
+		details[output.Word] = fmt.Sprintf("level:%d,categories:%s",
 			output.Level, strings.Join(output.Categories, ","))
 	}
 
@@ -245,7 +245,7 @@ func (f *ContentFilter) doFilter(text string, options *types.FilterOptions) *typ
 // isInWhitelist 检查是否在白名单中
 func (f *ContentFilter) isInWhitelist(text string) bool {
 	normalizedText := strings.ToLower(algorithm.NormalizeText(text))
-	
+
 	// 检查完整文本
 	if f.whitelist[normalizedText] {
 		return true
@@ -283,7 +283,7 @@ func (f *ContentFilter) generateCacheKey(text string, options *types.FilterOptio
 	if options != nil {
 		optionsStr = fmt.Sprintf("%v", options)
 	}
-	
+
 	key := fmt.Sprintf("%s:%s", text, optionsStr)
 	hash := md5.Sum([]byte(key))
 	return fmt.Sprintf("%x", hash)
@@ -330,15 +330,15 @@ func (f *ContentFilter) RemoveFromWhitelist(word string) {
 // Close 关闭过滤器
 func (f *ContentFilter) Close() error {
 	close(f.stopChan)
-	
+
 	if f.reloadTicker != nil {
 		f.reloadTicker.Stop()
 	}
-	
+
 	if f.cache != nil {
 		f.cache.Close()
 	}
-	
+
 	return f.nacosClient.Close()
 }
 

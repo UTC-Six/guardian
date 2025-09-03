@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/guardian/content-filter/pkg/guardian"
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/types"
+	"github.com/UTC-Six/guardian/pkg/guardian"
 )
 
 func main() {
@@ -29,11 +29,11 @@ func main() {
 			},
 		},
 		FilterConfig: types.FilterConfig{
-			DataId:         "sensitive_words",
-			Group:          "DEFAULT_GROUP",
-			ReloadPeriod:   5 * time.Minute,
-			EnableCache:    true,
-			CacheSize:      10000,
+			DataId:          "sensitive_words",
+			Group:           "DEFAULT_GROUP",
+			ReloadPeriod:    5 * time.Minute,
+			EnableCache:     true,
+			CacheSize:       10000,
 			EnableWhitelist: true,
 		},
 	}
@@ -47,7 +47,7 @@ func main() {
 
 	// 高级选项检查
 	fmt.Println("=== 高级选项检查 ===")
-	
+
 	// 自定义选项
 	options := &types.FilterOptions{
 		EnableWhitelist: true,
@@ -58,7 +58,7 @@ func main() {
 
 	testText := "这段文本包含辱骂词1和政治敏感词1"
 	result := g.CheckWithOptions(testText, options)
-	
+
 	fmt.Printf("文本: %s\n", testText)
 	fmt.Printf("通过: %v\n", result.Passed)
 	if !result.Passed {
@@ -69,24 +69,24 @@ func main() {
 
 	// 动态添加白名单
 	fmt.Println("\n=== 动态白名单管理 ===")
-	
+
 	// 添加白名单
 	g.AddToWhitelist("特殊词汇")
-	
+
 	// 测试白名单效果
 	whitelistResult := g.Check("特殊词汇不应该被过滤")
 	fmt.Printf("白名单测试: %v\n", whitelistResult.Passed)
-	
+
 	// 移除白名单
 	g.RemoveFromWhitelist("特殊词汇")
-	
+
 	// 再次测试
 	whitelistResult2 := g.Check("特殊词汇不应该被过滤")
 	fmt.Printf("移除白名单后: %v\n", whitelistResult2.Passed)
 
 	// 动态更新词库
 	fmt.Println("\n=== 动态词库更新 ===")
-	
+
 	// 创建新的词库
 	newWordDB := &types.WordDatabase{
 		Version:    "1.1.0",
@@ -112,13 +112,13 @@ func main() {
 			"新敏感词1": "***",
 		},
 	}
-	
+
 	// 更新词库
 	if err := g.UpdateWordDatabase(newWordDB); err != nil {
 		fmt.Printf("更新词库失败: %v\n", err)
 	} else {
 		fmt.Println("词库更新成功")
-		
+
 		// 测试新词库
 		newResult := g.Check("新敏感词1")
 		fmt.Printf("新敏感词检查: %v\n", newResult.Passed)
@@ -129,23 +129,23 @@ func main() {
 
 	// 性能测试
 	fmt.Println("\n=== 性能测试 ===")
-	
+
 	testTexts := make([]string, 1000)
 	for i := 0; i < 1000; i++ {
 		testTexts[i] = fmt.Sprintf("测试文本%d", i)
 	}
-	
+
 	start := time.Now()
 	results := g.BatchCheck(testTexts)
 	duration := time.Since(start)
-	
+
 	passedCount := 0
 	for _, result := range results {
 		if result.Passed {
 			passedCount++
 		}
 	}
-	
+
 	fmt.Printf("处理1000个文本耗时: %v\n", duration)
 	fmt.Printf("平均每个文本耗时: %v\n", duration/1000)
 	fmt.Printf("通过数量: %d\n", passedCount)

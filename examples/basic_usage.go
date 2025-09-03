@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/guardian/content-filter/pkg/guardian"
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/types"
+	"github.com/UTC-Six/guardian/pkg/guardian"
 )
 
 func main() {
@@ -30,11 +30,11 @@ func main() {
 			},
 		},
 		FilterConfig: types.FilterConfig{
-			DataId:         "sensitive_words",
-			Group:          "DEFAULT_GROUP",
-			ReloadPeriod:   5 * time.Minute,
-			EnableCache:    true,
-			CacheSize:      10000,
+			DataId:          "sensitive_words",
+			Group:           "DEFAULT_GROUP",
+			ReloadPeriod:    5 * time.Minute,
+			EnableCache:     true,
+			CacheSize:       10000,
 			EnableWhitelist: true,
 		},
 	}
@@ -97,7 +97,7 @@ func main() {
 		"正常文本2",
 		"辱骂词1",
 	}
-	
+
 	batchResults := g.BatchCheck(batchTexts)
 	for i, result := range batchResults {
 		fmt.Printf("文本%d: %s, 通过: %v\n", i+1, batchTexts[i], result.Passed)

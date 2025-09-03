@@ -10,8 +10,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/guardian/content-filter/pkg/guardian"
-	"github.com/guardian/content-filter/internal/types"
+	"github.com/UTC-Six/guardian/internal/types"
+	"github.com/UTC-Six/guardian/pkg/guardian"
 )
 
 var (
@@ -69,11 +69,11 @@ func loadConfig(filename string) (*types.Config, error) {
 			},
 		},
 		FilterConfig: types.FilterConfig{
-			DataId:         "sensitive_words",
-			Group:          "DEFAULT_GROUP",
-			ReloadPeriod:   5 * time.Minute,
-			EnableCache:    true,
-			CacheSize:      10000,
+			DataId:          "sensitive_words",
+			Group:           "DEFAULT_GROUP",
+			ReloadPeriod:    5 * time.Minute,
+			EnableCache:     true,
+			CacheSize:       10000,
 			EnableWhitelist: true,
 		},
 	}
@@ -84,7 +84,7 @@ func loadConfig(filename string) (*types.Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to read config file: %w", err)
 		}
-		
+
 		// 这里应该解析YAML，为了简化使用JSON
 		if err := json.Unmarshal(data, config); err != nil {
 			log.Printf("Warning: failed to parse config file, using default config: %v", err)
@@ -119,7 +119,7 @@ func checkHandler(g *guardian.Guardian) http.HandlerFunc {
 		}
 
 		var req struct {
-			Text    string                `json:"text"`
+			Text    string               `json:"text"`
 			Options *types.FilterOptions `json:"options,omitempty"`
 		}
 
@@ -149,7 +149,7 @@ func batchCheckHandler(g *guardian.Guardian) http.HandlerFunc {
 		}
 
 		var req struct {
-			Texts   []string              `json:"texts"`
+			Texts   []string             `json:"texts"`
 			Options *types.FilterOptions `json:"options,omitempty"`
 		}
 
