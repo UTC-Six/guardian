@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "update_time": "2024-01-01T00:00:00Z",
+  "whitelist": [
+    "正常词汇1",
+    "正常词汇2",
+    "测试词汇"
+  ],
+  "blacklist": [
+    {
+      "word": "敏感词1",
+      "categories": ["abuse", "politics"],
+      "level": 3
+    },
+    {
+      "word": "敏感词2",
+      "categories": ["abuse"],
+      "level": 2
+    }
+  ],
+  "categories": {
+    "abuse": [
+      {
+        "word": "辱骂词1",
+        "categories": ["abuse"],
+        "level": 4
+      },
+      {
+        "word": "辱骂词2",
+        "categories": ["abuse"],
+        "level": 3
+      }
+    ],
+    "politics": [
+      {
+        "word": "政治敏感词1",
+        "categories": ["politics"],
+        "level": 5
+      },
+      {
+        "word": "政治敏感词2",
+        "categories": ["politics"],
+        "level": 4
+      }
+    ],
+    "violence": [
+      {
+        "word": "暴力词1",
+        "categories": ["violence"],
+        "level": 3
+      }
+    ],
+    "adult": [
+      {
+        "word": "成人内容词1",
+        "categories": ["adult"],
+        "level": 4
+      }
+    ]
+  },
+  "replacements": {
+    "敏感词1": "***",
+    "敏感词2": "***"
+  }
+}
