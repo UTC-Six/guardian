@@ -6,28 +6,46 @@ import (
 )
 
 // ACNode AC自动机节点
+// 设计思路：
+// 1. 使用Trie树结构存储敏感词，每个节点代表一个字符
+// 2. 失败指针(fail)实现KMP算法的回溯机制，避免重复匹配
+// 3. 输出信息(output)存储匹配到的敏感词及其元数据
+// 4. isEnd标记是否为敏感词的结束节点
 type ACNode struct {
-	children map[rune]*ACNode // 子节点
-	fail     *ACNode          // 失败指针
-	output   []*Output        // 输出信息
-	isEnd    bool             // 是否为结束节点
+	children map[rune]*ACNode // 子节点：字符 -> 子节点映射
+	fail     *ACNode          // 失败指针：KMP算法的回溯指针
+	output   []*Output        // 输出信息：匹配到的敏感词列表
+	isEnd    bool             // 是否为结束节点：敏感词结束标记
 }
 
 // Output 输出信息
+// 设计思路：
+// 1. 存储敏感词的完整信息和元数据
+// 2. 支持多分类和敏感级别，便于精细化过滤
+// 3. 提供丰富的上下文信息，支持复杂的过滤策略
 type Output struct {
-	Word       string   // 敏感词
-	Categories []string // 分类
-	Level      int      // 敏感级别
+	Word       string   // 敏感词：匹配到的完整词汇
+	Categories []string // 分类：敏感词所属的分类列表
+	Level      int      // 敏感级别：1-10的敏感程度
 }
 
 // ACAutomaton AC自动机
+// 设计思路：
+// 1. 基于Aho-Corasick算法实现多模式字符串匹配
+// 2. 使用读写锁保证并发安全，读操作可以并发执行
+// 3. 版本控制支持词库的动态更新和回滚
+// 4. 时间复杂度：构建O(Σ|Pi|)，搜索O(n+m+z)，其中n是文本长度，m是模式总长度，z是匹配数
 type ACAutomaton struct {
-	root    *ACNode
-	mu      sync.RWMutex
-	version string
+	root    *ACNode      // 根节点：Trie树的根
+	mu      sync.RWMutex // 读写锁：保证并发安全
+	version string       // 版本号：词库版本控制
 }
 
 // NewACAutomaton 创建新的AC自动机
+// 设计思路：
+// 1. 初始化根节点，根节点不存储字符
+// 2. 预分配输出切片，避免频繁的内存分配
+// 3. 设置合理的初始容量，提升性能
 func NewACAutomaton() *ACAutomaton {
 	return &ACAutomaton{
 		root: &ACNode{
