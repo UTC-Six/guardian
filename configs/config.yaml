@@ -1,0 +1,20 @@
+# Guardian 黄反校验SDK 配置文件
+nacos_config:
+  server_configs:
+    - ip_addr: "127.0.0.1"
+      port: 8848
+  client_config:
+    namespace_id: "public"
+    timeout_ms: 5000
+    not_load_cache_at_start: false
+    log_dir: "./logs"
+    cache_dir: "./cache"
+    log_level: "info"
+
+filter_config:
+  data_id: "sensitive_words"
+  group: "DEFAULT_GROUP"
+  reload_period: "5m"
+  enable_cache: true
+  cache_size: 10000
+  enable_whitelist: true

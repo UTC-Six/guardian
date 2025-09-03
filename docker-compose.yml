@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=embedded
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    volumes:
+      - nacos_data:/home/nacos/data
+    networks:
+      - guardian-network
+
+  guardian:
+    build: .
+    container_name: guardian-sdk
+    ports:
+      - "8080:8080"
+    environment:
+      - NACOS_SERVER=127.0.0.1:8848
+    depends_on:
+      - nacos
+    volumes:
+      - ./configs:/app/configs
+      - ./logs:/app/logs
+      - ./cache:/app/cache
+    networks:
+      - guardian-network
+
+volumes:
+  nacos_data:
+
+networks:
+  guardian-network:
+    driver: bridge
